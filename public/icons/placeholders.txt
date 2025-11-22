@@ -1,0 +1,1 @@
+Add action icons (add.svg, edit.svg, delete.svg, success.svg, warning.svg)

@@ -1,0 +1,77 @@
+@use "../base/tokens";
+@use "../base/mixins";
+
+.btn {
+    @include mixins.button-reset;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: tokens.space("sm");
+    border-radius: tokens.radius("md");
+    font-size: tokens.font-size("sm");
+    font-weight: 600;
+    transition: background-color 120ms ease-in-out, color 120ms ease-in-out,
+        border-color 120ms ease-in-out;
+    padding-inline: tokens.space("lg");
+    padding-block: 0.625rem;
+    border: 1px solid transparent;
+    background-color: tokens.color-var("brand");
+    color: tokens.color-var("surface");
+
+    &:focus-visible {
+        @include mixins.focus-ring;
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+}
+
+.btn--secondary {
+    background-color: tokens.color-var("surface");
+    color: tokens.color-var("text-primary");
+    border-color: tokens.color-var("border");
+
+    &:hover:not(:disabled) {
+        background-color: tokens.color-var("surface-muted");
+    }
+}
+
+.btn--ghost {
+    background-color: transparent;
+    color: tokens.color-var("text-secondary");
+    border-color: transparent;
+
+    &:hover:not(:disabled) {
+        background-color: tokens.color-var("surface-muted");
+    }
+}
+
+.btn--destructive {
+    background-color: tokens.color-var("danger");
+    color: tokens.color-var("surface");
+
+    &:hover:not(:disabled) {
+        background-color: tokens.color-var("danger-soft");
+        color: tokens.color-var("danger");
+    }
+}
+
+.btn--sm {
+    padding-inline: tokens.space("md");
+    padding-block: 0.5rem;
+    font-size: tokens.font-size("sm");
+}
+
+.btn--lg {
+    padding-inline: tokens.space("xl");
+    padding-block: 0.85rem;
+    font-size: tokens.font-size("lg");
+}
+
+.btn__icon {
+    display: inline-flex;
+    width: 1rem;
+    height: 1rem;
+}

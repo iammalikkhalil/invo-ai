@@ -1,0 +1,127 @@
+@use "../base/tokens";
+
+.toast-host {
+    position: fixed;
+    top: tokens.space("lg");
+    right: tokens.space("lg");
+    display: grid;
+    gap: tokens.space("sm");
+    z-index: 60;
+}
+
+.toast {
+    min-width: 240px;
+    background: tokens.color-var("surface");
+    border: 1px solid tokens.color-var("border");
+    border-left: 4px solid tokens.color-var("brand");
+    border-radius: tokens.radius("md");
+    box-shadow: tokens.shadow("md");
+    padding: tokens.space("md");
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: tokens.space("sm");
+    align-items: start;
+}
+
+.toast__title {
+    font-weight: 600;
+}
+
+.toast__description {
+    color: tokens.color-var("text-muted");
+    font-size: tokens.font-size("sm");
+}
+
+.toast__close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: tokens.font-size("lg");
+    line-height: 1;
+    color: tokens.color-var("text-muted");
+}
+
+.toast--success {
+    border-left-color: tokens.color-var("success");
+}
+.toast--warning {
+    border-left-color: tokens.color-var("warning");
+}
+.toast--error {
+    border-left-color: tokens.color-var("danger");
+}
+
+.modal-host {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.25);
+    display: grid;
+    place-items: center;
+    z-index: 50;
+    padding: tokens.space("lg");
+}
+
+.modal {
+    background: tokens.color-var("surface");
+    border: 1px solid tokens.color-var("border");
+    border-radius: tokens.radius("lg");
+    box-shadow: tokens.shadow("lg");
+    padding: tokens.space("lg");
+    max-width: 480px;
+    width: min(480px, 100%);
+    display: grid;
+    gap: tokens.space("md");
+}
+
+.modal__title {
+    font-weight: 600;
+    font-size: tokens.font-size("lg");
+}
+
+.modal__description {
+    color: tokens.color-var("text-secondary");
+    font-size: tokens.font-size("sm");
+}
+
+.modal__footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: tokens.space("sm");
+}
+
+.loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(4px);
+    display: grid;
+    place-items: center;
+    z-index: 70;
+}
+
+.dark .loading-overlay {
+    background: rgba(0, 0, 0, 0.35);
+}
+
+.loading-overlay__spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid tokens.color-var("border");
+    border-top-color: tokens.color-var("brand");
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-inline: auto;
+}
+
+.loading-overlay__text {
+    margin-top: tokens.space("sm");
+    color: tokens.color-var("text-primary");
+    font-weight: 600;
+    text-align: center;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

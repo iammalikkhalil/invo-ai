@@ -1,0 +1,7 @@
+@use "../../styles/base/tokens";
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: tokens.space("sm");
+}

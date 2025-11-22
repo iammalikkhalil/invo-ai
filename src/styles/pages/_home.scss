@@ -1,0 +1,110 @@
+@use "../base/tokens";
+@use "../base/mixins";
+
+.hero {
+    display: flex;
+    flex-direction: column;
+    gap: tokens.space("xl");
+    padding-block: tokens.space("2xl");
+
+    @include mixins.media(md) {
+        flex-direction: row;
+        align-items: center;
+    }
+}
+
+.hero__content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: tokens.space("lg");
+}
+
+.hero__tag {
+    display: inline-flex;
+    align-items: center;
+    gap: tokens.space("sm");
+    border-radius: tokens.radius("pill");
+    background-color: tokens.color-var("surface-muted");
+    padding: 0.35rem 0.85rem;
+    font-size: tokens.font-size("xs");
+    font-weight: 600;
+    color: tokens.color-var("text-secondary");
+}
+
+.hero__tag svg {
+    width: 1rem;
+    height: 1rem;
+    color: tokens.color-var("brand");
+}
+
+.hero__title {
+    font-size: tokens.font-size("3xl");
+    font-weight: 700;
+
+    @include mixins.media(md) {
+        font-size: tokens.font-size("4xl");
+    }
+}
+
+.hero__subtitle {
+    font-size: tokens.font-size("lg");
+    color: tokens.color-var("text-muted");
+    max-width: 42rem;
+}
+
+.hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: tokens.space("sm");
+    align-items: center;
+}
+
+.hero__highlights {
+    display: grid;
+    gap: tokens.space("md");
+
+    @include mixins.media(md) {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+.highlight-card {
+    border-radius: tokens.radius("md");
+    border: 1px solid tokens.color-var("border");
+    padding: tokens.space("md");
+    background-color: tokens.color-var("surface");
+    display: flex;
+    gap: tokens.space("md");
+}
+
+.highlight-card__icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: tokens.color-var("brand");
+    flex-shrink: 0;
+}
+
+.highlight-card__title {
+    font-weight: 600;
+    color: tokens.color-var("text-primary");
+}
+
+.ia-card {
+    max-width: 30rem;
+}
+
+.ia-card__list {
+    display: flex;
+    flex-direction: column;
+    gap: tokens.space("sm");
+    font-size: tokens.font-size("sm");
+    color: tokens.color-var("text-secondary");
+}
+
+.ia-card__item {
+    border-radius: tokens.radius("md");
+    border: 1px solid tokens.color-var("border");
+    background-color: tokens.color-var("surface-muted");
+    padding: tokens.space("md");
+}

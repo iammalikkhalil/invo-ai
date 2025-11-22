@@ -1,0 +1,96 @@
+@use "../base/tokens";
+@use "../base/mixins";
+
+.stat-grid {
+    display: grid;
+    gap: tokens.space("lg");
+
+    @include mixins.media(md) {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+.stat-card__value {
+    font-size: tokens.font-size("3xl");
+    font-weight: 600;
+}
+
+.stat-card__delta {
+    font-size: tokens.font-size("sm");
+    color: tokens.color-var("text-muted");
+}
+
+.recent-item {
+    display: flex;
+    flex-direction: column;
+    gap: tokens.space("sm");
+    border: 1px solid tokens.color-var("border");
+    border-radius: tokens.radius("md");
+    padding: tokens.space("md");
+    background-color: tokens.color-var("surface-muted");
+
+    @include mixins.media(sm) {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+}
+
+.recent-item__meta {
+    display: flex;
+    flex-direction: column;
+    gap: tokens.space("xs");
+}
+
+.recent-item__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: tokens.space("sm");
+    align-items: center;
+    font-size: tokens.font-size("sm");
+    color: tokens.color-var("text-secondary");
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: tokens.font-size("sm");
+    min-width: 720px;
+}
+
+.data-table thead {
+    text-transform: uppercase;
+    font-size: tokens.font-size("xs");
+    letter-spacing: 0.05em;
+    color: tokens.color-var("text-muted");
+    background-color: tokens.color-var("surface-muted");
+}
+
+.data-table th,
+.data-table td {
+    padding: 0.75rem tokens.space("lg");
+    text-align: left;
+    border-bottom: 1px solid tokens.color-var("border");
+}
+
+.data-table tbody tr:hover {
+    background-color: tokens.color-var("surface-muted");
+}
+
+.data-table__actions {
+    text-align: right;
+}
+
+.icon-text-row {
+    display: inline-flex;
+    align-items: center;
+    gap: tokens.space("sm");
+    font-size: tokens.font-size("sm");
+    color: tokens.color-var("text-secondary");
+
+    svg {
+        width: 1.25rem;
+        height: 1.25rem;
+        color: tokens.color-var("brand");
+    }
+}

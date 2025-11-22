@@ -1,0 +1,67 @@
+@use "sass:map";
+@use "./tokens";
+
+$breakpoints: (
+    "sm": 40rem,
+    "md": 48rem,
+    "lg": 64rem,
+    "xl": 80rem
+);
+
+@mixin media($size) {
+    $width: map.get($breakpoints, $size);
+    @if $width {
+        @media (min-width: $width) {
+            @content;
+        }
+    }
+}
+
+@mixin focus-ring {
+    outline: none;
+    box-shadow:
+        0 0 0 2px tokens.color-var("surface"),
+        0 0 0 4px tokens.color-var("brand");
+}
+
+@mixin typography($size, $weight: 500, $line-height-key: md) {
+    font-size: tokens.font-size($size);
+    line-height: tokens.line-height($line-height-key);
+    font-weight: $weight;
+}
+
+@mixin button-reset {
+    appearance: none;
+    border: none;
+    font: inherit;
+    cursor: pointer;
+    background: none;
+    padding: 0;
+}
+
+@mixin card {
+    background-color: tokens.color-var("surface");
+    border: 1px solid tokens.color-var("border");
+    border-radius: tokens.radius("lg");
+    box-shadow: tokens.shadow("sm");
+}
+
+@mixin stack($gap: "lg") {
+    display: flex;
+    flex-direction: column;
+    gap: tokens.space($gap);
+}
+
+@mixin grid-columns($count, $gap: "lg") {
+    display: grid;
+    gap: tokens.space($gap);
+    @include media(md) {
+        grid-template-columns: repeat($count, minmax(0, 1fr));
+    }
+}
+
+@mixin container {
+    width: min(1200px, 100%);
+    margin-inline: auto;
+    padding-inline: tokens.space("lg");
+}

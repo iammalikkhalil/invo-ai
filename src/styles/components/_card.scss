@@ -1,0 +1,35 @@
+@use "../base/tokens";
+@use "../base/mixins";
+
+.card {
+    @include mixins.card;
+    display: flex;
+    flex-direction: column;
+}
+
+.card__header,
+.card__content,
+.card__footer {
+    padding: tokens.space("lg");
+}
+
+.card__header {
+    border-bottom: 1px solid tokens.color-var("border");
+    gap: tokens.space("xs");
+    display: flex;
+    flex-direction: column;
+}
+
+.card__footer {
+    border-top: 1px solid tokens.color-var("border");
+}
+
+.card__title {
+    font-size: tokens.font-size("lg");
+    font-weight: 600;
+}
+
+.card__description {
+    font-size: tokens.font-size("sm");
+    color: tokens.color-var("text-muted");
+}

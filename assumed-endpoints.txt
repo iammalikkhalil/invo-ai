@@ -1,0 +1,22 @@
+Assumed API endpoints (not yet implemented in backend; used to scaffold the web UI):
+
+Invoices
+- GET /api/invoices
+- GET /api/invoices/{id}
+- POST /api/invoices
+- PUT /api/invoices/{id}
+- DELETE /api/invoices/{id}
+
+Expenses
+- GET /api/expenses
+- GET /api/expenses/{id}
+- POST /api/expenses
+- PUT /api/expenses/{id}
+- DELETE /api/expenses/{id}
+
+Reports
+- GET /api/reports/summary?type={pnl|tax|cashflow}&from={yyyy-mm-dd}&to={yyyy-mm-dd}&businessId={uuid}
+- GET /api/reports/export?type={pnl|tax|cashflow}&format={pdf|csv}&from={yyyy-mm-dd}&to={yyyy-mm-dd}&businessId={uuid}
+
+Uploads (if needed for assets like invoices/PDFs/attachments)
+- POST /api/uploads (multipart/form-data) returns { url, id }

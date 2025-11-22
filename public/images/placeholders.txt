@@ -1,0 +1,1 @@
+Add hero.jpg, empty-states.png, dashboard-illus.svg

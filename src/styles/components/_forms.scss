@@ -1,0 +1,66 @@
+@use "../base/tokens";
+@use "../base/mixins";
+
+.form-grid {
+    display: grid;
+    gap: tokens.space("lg");
+
+    @include mixins.media(sm) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+.form-control {
+    display: flex;
+    flex-direction: column;
+    gap: tokens.space("xs");
+}
+
+.form-label {
+    font-size: tokens.font-size("sm");
+    font-weight: 500;
+    color: tokens.color-var("text-primary");
+}
+
+.text-input {
+    border-radius: tokens.radius("md");
+    border: 1px solid tokens.color-var("border");
+    background-color: tokens.color-var("surface");
+    padding: 0.65rem tokens.space("md");
+    font-size: tokens.font-size("sm");
+    transition: border-color 120ms ease-in-out, box-shadow 120ms ease-in-out;
+
+    &:focus {
+        border-color: tokens.color-var("brand");
+        @include mixins.focus-ring;
+    }
+
+    &:disabled {
+        opacity: 0.7;
+    }
+}
+
+.form-helper {
+    font-size: tokens.font-size("xs");
+    color: tokens.color-var("text-muted");
+}
+
+.form-error {
+    font-size: tokens.font-size("xs");
+    color: tokens.color-var("danger");
+}
+
+.checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: tokens.space("sm");
+    border: 1px solid tokens.color-var("border");
+    border-radius: tokens.radius("md");
+    background-color: tokens.color-var("surface");
+    padding: 0.5rem tokens.space("md");
+}
+
+.checkbox-row input[type="checkbox"] {
+    width: 1rem;
+    height: 1rem;
+}

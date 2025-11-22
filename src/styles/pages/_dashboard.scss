@@ -1,0 +1,26 @@
+@use "../base/tokens";
+@use "../base/mixins";
+
+.recent-list {
+    @include mixins.stack("md");
+}
+
+.invoice-summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: tokens.space("sm");
+    align-items: center;
+    font-size: tokens.font-size("sm");
+    color: tokens.color-var("text-secondary");
+}
+
+.invoice-summary__amount {
+    font-weight: 600;
+    color: tokens.color-var("text-primary");
+}
+
+.export-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: tokens.space("sm");
+}

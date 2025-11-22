@@ -1,0 +1,87 @@
+@use "sass:map";
+@use "./tokens";
+@use "./mixins";
+
+@mixin define-color-vars($palette) {
+    @each $token, $value in $palette {
+        --color-#{$token}: #{$value};
+    }
+}
+
+@mixin define-scale-vars($prefix, $scale) {
+    @each $token, $value in $scale {
+        --#{$prefix}-#{$token}: #{$value};
+    }
+}
+
+:root {
+    --font-family-sans: #{tokens.$font-family-sans};
+
+    @include define-color-vars(tokens.colors(light));
+    @include define-scale-vars("space", tokens.all-spacing());
+    @include define-scale-vars("radius", tokens.all-radii());
+    @include define-scale-vars("font-size", tokens.all-font-sizes());
+    @include define-scale-vars("line-height", tokens.all-line-heights());
+    @include define-scale-vars("shadow", tokens.all-shadows());
+}
+
+.dark {
+    color-scheme: dark;
+    @include define-color-vars(tokens.colors(dark));
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: tokens.font-family();
+    background-color: tokens.color-var("background");
+    color: tokens.color-var("text-primary");
+    min-height: 100vh;
+    line-height: tokens.line-height("lg");
+    text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+    font-weight: 600;
+    color: tokens.color-var("text-primary");
+}
+
+p {
+    margin: 0;
+    color: tokens.color-var("text-secondary");
+}
+
+a {
+    color: tokens.color-var("brand");
+    text-decoration: none;
+    transition: color 150ms ease-in-out;
+
+    &:hover {
+        color: tokens.color-var("brand-strong");
+    }
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+button {
+    font-family: tokens.font-family();
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}

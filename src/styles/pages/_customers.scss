@@ -1,0 +1,39 @@
+@use "../base/tokens";
+@use "../base/mixins";
+
+.customer-grid {
+    display: grid;
+    gap: tokens.space("lg");
+
+    @include mixins.media(md) {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+.customer-card__meta {
+    display: flex;
+    flex-direction: column;
+    gap: tokens.space("xs");
+}
+
+.customer-card__contact {
+    display: flex;
+    align-items: center;
+    gap: tokens.space("sm");
+    color: tokens.color-var("text-muted");
+    font-size: tokens.font-size("sm");
+
+    svg {
+        width: 1rem;
+        height: 1rem;
+        color: tokens.color-var("brand");
+    }
+}
+
+.customer-card__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: tokens.font-size("sm");
+    font-weight: 600;
+}

@@ -1,0 +1,13 @@
+@use "../base/tokens";
+@use "../base/mixins";
+
+.settings-actions {
+    display: flex;
+    align-items: center;
+    gap: tokens.space("sm");
+}
+
+.settings-hint {
+    font-size: tokens.font-size("sm");
+    color: tokens.color-var("text-muted");
+}

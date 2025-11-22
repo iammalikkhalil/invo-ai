@@ -1,0 +1,33 @@
+@use "../base/tokens";
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    border-radius: tokens.radius("pill");
+    padding: 0.2rem 0.65rem;
+    font-size: tokens.font-size("xs");
+    font-weight: 600;
+    background-color: tokens.color-var("surface-muted");
+    color: tokens.color-var("text-secondary");
+    border: 1px solid transparent;
+}
+
+.badge--success {
+    background-color: tokens.color-var("success-soft");
+    color: tokens.color-var("success");
+}
+
+.badge--warning {
+    background-color: tokens.color-var("warning-soft");
+    color: tokens.color-var("warning");
+}
+
+.badge--danger {
+    background-color: tokens.color-var("danger-soft");
+    color: tokens.color-var("danger");
+}
+
+.badge--outline {
+    background-color: transparent;
+    border-color: tokens.color-var("border");
+}

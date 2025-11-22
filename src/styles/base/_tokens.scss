@@ -1,0 +1,142 @@
+@use "sass:map";
+
+$font-family-sans: "Inter", "Inter var", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif !default;
+
+$colors-light: (
+    "background": #f8fafc,
+    "surface": #ffffff,
+    "surface-muted": #f1f5f9,
+    "border": #e2e8f0,
+    "border-strong": #cbd5f5,
+    "text-primary": #0f172a,
+    "text-secondary": #475569,
+    "text-muted": #64748b,
+    "brand": #2563eb,
+    "brand-strong": #1d4ed8,
+    "brand-soft": #dbeafe,
+    "success": #16a34a,
+    "success-soft": #dcfce7,
+    "warning": #c2410c,
+    "warning-soft": #ffedd5,
+    "danger": #b91c1c,
+    "danger-soft": #fee2e2,
+    "code-bg": #1e293b
+) !default;
+
+$colors-dark: (
+    "background": #020617,
+    "surface": #0f172a,
+    "surface-muted": #1e293b,
+    "border": #1f2937,
+    "border-strong": #334155,
+    "text-primary": #f8fafc,
+    "text-secondary": #cbd5f5,
+    "text-muted": #94a3b8,
+    "brand": #60a5fa,
+    "brand-strong": #93c5fd,
+    "brand-soft": #1d4ed8,
+    "success": #4ade80,
+    "success-soft": #166534,
+    "warning": #fb923c,
+    "warning-soft": #7c2d12,
+    "danger": #f87171,
+    "danger-soft": #7f1d1d,
+    "code-bg": #0f172a
+) !default;
+
+$spacing-scale: (
+    "0": 0,
+    "xs": 0.25rem,
+    "sm": 0.5rem,
+    "md": 0.75rem,
+    "lg": 1rem,
+    "xl": 1.5rem,
+    "2xl": 2rem,
+    "3xl": 3rem
+) !default;
+
+$radii: (
+    "sm": 0.25rem,
+    "md": 0.5rem,
+    "lg": 0.75rem,
+    "xl": 1rem,
+    "pill": 999px
+) !default;
+
+$font-sizes: (
+    "xs": 0.75rem,
+    "sm": 0.875rem,
+    "md": 1rem,
+    "lg": 1.125rem,
+    "xl": 1.25rem,
+    "2xl": 1.5rem,
+    "3xl": 1.875rem,
+    "4xl": 2.25rem
+) !default;
+
+$line-heights: (
+    "xs": 1.1,
+    "sm": 1.25,
+    "md": 1.4,
+    "lg": 1.5,
+    "xl": 1.6
+) !default;
+
+$shadows: (
+    "sm": 0 1px 2px rgba(15, 23, 42, 0.08),
+    "md": 0 4px 10px rgba(15, 23, 42, 0.08),
+    "lg": 0 10px 25px rgba(15, 23, 42, 0.12)
+) !default;
+
+@function color-var($token) {
+    @return var(--color-#{$token});
+}
+
+@function space($token) {
+    @return var(--space-#{$token});
+}
+
+@function radius($token) {
+    @return var(--radius-#{$token});
+}
+
+@function font-size($token) {
+    @return var(--font-size-#{$token});
+}
+
+@function line-height($token) {
+    @return var(--line-height-#{$token});
+}
+
+@function shadow($token) {
+    @return var(--shadow-#{$token});
+}
+
+@function font-family() {
+    @return var(--font-family-sans);
+}
+
+@function colors($mode: light) {
+    @return if($mode == dark, $colors-dark, $colors-light);
+}
+
+@function all-spacing() {
+    @return $spacing-scale;
+}
+
+@function all-font-sizes() {
+    @return $font-sizes;
+}
+
+@function all-radii() {
+    @return $radii;
+}
+
+@function all-line-heights() {
+    @return $line-heights;
+}
+
+@function all-shadows() {
+    @return $shadows;
+}
