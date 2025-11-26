@@ -209,20 +209,70 @@ export function OAuthButtons() {
             notificationToken: null
         };
 
-        socialMutation.mutate(payload);
+        // Mock login: skip backend, directly set session
+        try {
+            dispatch(setTokens({ accessToken: token }));
+            saveTokens(token);
+            dispatch(
+                setUser({
+                    id: Number(decoded?.sub ?? Date.now()),
+                    username: payload.username,
+                    email: payload.email,
+                    phoneNumber: (decoded?.phone_number as string | undefined) ?? null,
+                    isVerified: Boolean(decoded?.email_verified ?? true),
+                    address: null,
+                    country: (decoded?.locale as string | undefined) ?? null,
+                    state: null,
+                    city: null,
+                    profilePictureUrl:
+                        (decoded?.picture as string | undefined) ?? undefined
+                })
+            );
+            dispatch(
+                pushToast({
+                    level: "success",
+                    title: "Google login mocked",
+                    description: "Signed in with Google token (no backend call)."
+                })
+            );
+            setBusyProvider(null);
+            router.push("/dashboard");
+        } catch (error) {
+            logGoogleError("Failed to mock login from Google token", error);
+            setBusyProvider(null);
+            dispatch(
+                pushToast({
+                    level: "error",
+                    title: "Google login failed",
+                    description: "Could not finalize mock login."
+                })
+            );
+        }
+    };
+
+    const mapPromptReason = (reason?: string) => {
+        if (!reason) return undefined;
+        if (reason === "unregistered_origin") {
+            return "Origin not allowed for this Google client. Add your full origin (protocol + host + port) to OAuth Authorized JavaScript origins.";
+        }
+        if (reason === "idpiframe_blocked") {
+            return "Google prompt was blocked (third-party cookies/iframe). Allow cookies or test over HTTPS.";
+        }
+        return reason;
     };
 
     const handlePromptNotification = (notification: GooglePromptNotification) => {
         if (notification.isNotDisplayed()) {
             const reason = notification.getNotDisplayedReason?.();
-            logGoogleError("Google prompt not displayed", { reason });
+            const message = mapPromptReason(reason);
+            logGoogleError("Google prompt not displayed", { reason, message });
             setBusyProvider(null);
             dispatch(
                 pushToast({
                     level: "error",
                     title: "Google login blocked",
                     description:
-                        reason ??
+                        message ??
                         "Google prompt was blocked. Check third-party cookies and allowed origins."
                 })
             );
