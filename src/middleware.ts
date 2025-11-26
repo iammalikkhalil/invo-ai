@@ -1,7 +1,15 @@
 import { NextResponse, type NextRequest } from "next/server";
 
 // Public auth routes
-const AUTH_PATHS = ["/login", "/signup", "/verify-otp", "/reset-password"];
+const AUTH_PATHS = [
+    "/login",
+    "/signup",
+    "/verify-otp",
+    "/reset-password",
+    "/reset-password/request",
+    "/reset-password/verify",
+    "/reset-password/new"
+];
 // Static/asset prefixes we skip
 const ASSET_PREFIXES = ["/_next", "/favicon.ico", "/robots.txt", "/images", "/icons", "/api"];
 const PUBLIC_FILE = /\.(.*)$/;

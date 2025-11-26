@@ -41,6 +41,18 @@
     color: tokens.color-var("text-muted");
 }
 
+.toast__progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    width: 100%;
+    background: tokens.color-var("brand");
+    animation-name: toast-progress;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+}
+
 .toast--success {
     border-left-color: tokens.color-var("success");
 }
@@ -123,5 +135,14 @@
 @keyframes spin {
     to {
         transform: rotate(360deg);
+    }
+}
+
+@keyframes toast-progress {
+    from {
+        width: 100%;
+    }
+    to {
+        width: 0%;
     }
 }

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import type { Route } from "next";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,9 +18,9 @@ import { setTokens, setUser } from "@/store/slices/authSlice";
 import { pushToast } from "@/store/slices/uiSlice";
 import { saveTokens } from "@/services/auth/tokenStorage";
 import { useApiError } from "@/hooks/useApiError";
+import { getLastAuthEmail } from "@/services/auth/localAuthState";
 
 const schema = z.object({
-    email: z.string().email(),
     otp: z.string().min(4, "Enter the 4-digit code").max(6, "Enter a valid code")
 });
 
@@ -29,14 +30,28 @@ export default function VerifyOtpPage() {
     const router = useRouter();
     const dispatch = useAppDispatch();
     const { notifyError } = useApiError();
+    const [email, setEmail] = useState<string | undefined>(undefined);
 
     const form = useForm<FormValues>({
         resolver: zodResolver(schema),
         defaultValues: {
-            email: "",
             otp: ""
         }
     });
+
+    useEffect(() => {
+        const stored = getLastAuthEmail();
+        if (!stored) {
+            dispatch(
+                pushToast({
+                    level: "warning",
+                    title: "Email missing",
+                    description: "Signup again to verify your email."
+                })
+            );
+        }
+        setEmail(stored);
+    }, [dispatch]);
 
     const verifyMutation = useMutation({
         mutationFn: verifyOtp,
@@ -71,11 +86,20 @@ export default function VerifyOtpPage() {
     });
 
     const onSubmit = (values: FormValues) => {
-        verifyMutation.mutate(values);
+        if (!email) {
+            dispatch(
+                pushToast({
+                    level: "warning",
+                    title: "Email missing",
+                    description: "Signup again to verify your email."
+                })
+            );
+            return;
+        }
+        verifyMutation.mutate({ email, otp: values.otp });
     };
 
     const onResend = () => {
-        const email = form.getValues("email");
         if (!email) {
             dispatch(
                 pushToast({
@@ -96,15 +120,12 @@ export default function VerifyOtpPage() {
         >
             <form className="page-section" onSubmit={form.handleSubmit(onSubmit)}>
                 <div className="form-control">
-                    <label className="form-label" htmlFor="email">
-                        Email
-                    </label>
-                    <Input id="email" type="email" {...form.register("email")} />
-                    {form.formState.errors.email && (
-                        <p className="form-error">{form.formState.errors.email.message}</p>
-                    )}
+                    <label className="form-label">Email</label>
+                    <div className="text-input" aria-readonly="true">
+                        {email ?? "No email found. Please sign up again."}
+                    </div>
                 </div>
-                    <div className="form-control">
+                <div className="form-control">
                     <label className="form-label" htmlFor="otp">
                         OTP code
                     </label>

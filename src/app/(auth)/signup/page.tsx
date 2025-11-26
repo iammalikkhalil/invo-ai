@@ -11,11 +11,13 @@ import { signup } from "@/services/auth";
 import { AuthLayout } from "@/components/auth/AuthLayout";
 import { OAuthButtons } from "@/components/auth/OAuthButtons";
 import { PasswordStrength } from "@/components/auth/PasswordStrength";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { pushToast } from "@/store/slices/uiSlice";
 import { useAppDispatch } from "@/store";
 import { useApiError } from "@/hooks/useApiError";
+import { setLastAuthEmail } from "@/services/auth/localAuthState";
 
 const schema = z.object({
     username: z.string().min(2, "Name is required"),
@@ -49,6 +51,7 @@ export default function SignupPage() {
     const mutation = useMutation({
         mutationFn: signup,
         onSuccess: () => {
+            setLastAuthEmail(form.getValues("email"));
             dispatch(
                 pushToast({
                     level: "success",
@@ -104,9 +107,8 @@ export default function SignupPage() {
                     <label className="form-label" htmlFor="password">
                         Password
                     </label>
-                    <Input
+                    <PasswordInput
                         id="password"
-                        type="password"
                         autoComplete="new-password"
                         {...form.register("password")}
                     />

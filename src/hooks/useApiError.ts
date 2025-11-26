@@ -6,11 +6,13 @@ export function useApiError() {
     const dispatch = useAppDispatch();
 
     const notifyError = (err: unknown, title = "Request failed") => {
+        const desc = parseApiError(err);
+
         dispatch(
             pushToast({
                 level: "error",
                 title,
-                description: parseApiError(err)
+                description: desc
             })
         );
     };

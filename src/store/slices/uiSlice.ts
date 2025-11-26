@@ -7,6 +7,7 @@ export interface Toast {
     title: string;
     description?: string;
     level: ToastLevel;
+    durationMs?: number;
 }
 
 interface ModalState {
@@ -43,6 +44,15 @@ const uiSlice = createSlice({
             action: PayloadAction<Omit<Toast, "id"> & { id?: string }>
         ) {
             const id = action.payload.id ?? nanoid();
+            // Basic dedupe: prevent same title+description within current queue
+            const exists = state.toasts.some(
+                (t) =>
+                    t.title === action.payload.title &&
+                    t.description === action.payload.description &&
+                    t.level === action.payload.level
+            );
+            if (exists) return;
+
             state.toasts.push({ ...action.payload, id });
         },
         removeToast(state, action: PayloadAction<string>) {

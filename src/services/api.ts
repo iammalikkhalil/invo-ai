@@ -1,7 +1,7 @@
 import axios from "axios";
 import { store } from "@/store";
 import { clearAuth } from "@/store/slices/authSlice";
-import { pushToast, startLoading, stopLoading } from "@/store/slices/uiSlice";
+import { startLoading, stopLoading } from "@/store/slices/uiSlice";
 import { authConfig } from "./auth/config";
 
 const api = axios.create({
@@ -59,13 +59,6 @@ api.interceptors.response.use(
             message
         });
 
-        store.dispatch(
-            pushToast({
-                level: "error",
-                title: "Request failed",
-                description: message
-            })
-        );
         return Promise.reject(error);
     }
 );

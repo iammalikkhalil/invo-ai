@@ -12,6 +12,7 @@ import { login } from "@/services/auth";
 import { AuthLayout } from "@/components/auth/AuthLayout";
 import { OAuthButtons } from "@/components/auth/OAuthButtons";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Button } from "@/components/ui/button";
 import { useAppDispatch } from "@/store";
 import { setTokens, setUser } from "@/store/slices/authSlice";
@@ -76,15 +77,8 @@ export default function LoginPage() {
                 pushToast({
                     level: "success",
                     title: "Login successful",
-                    description: "Welcome back!"
-                })
-            );
-            // Debug toast to surface response data in UI
-            dispatch(
-                pushToast({
-                    level: "info",
-                    title: "API response",
-                    description: `User: ${data.userProfile.email}`
+                    description: "Welcome back!",
+                    durationMs: 2500
                 })
             );
             router.push("/dashboard");
@@ -100,13 +94,6 @@ export default function LoginPage() {
 
     const onSubmit = (values: FormValues) => {
         console.log("[auth][login] submit", values);
-        dispatch(
-            pushToast({
-                level: "info",
-                title: "Logging in",
-                description: "Submitting credentials..."
-            })
-        );
         mutation.mutate({
             email: values.email,
             password: values.password,
@@ -149,9 +136,8 @@ export default function LoginPage() {
                     <label className="form-label" htmlFor="password">
                         Password
                     </label>
-                    <Input
+                    <PasswordInput
                         id="password"
-                        type="password"
                         autoComplete="current-password"
                         {...form.register("password")}
                     />
@@ -169,7 +155,7 @@ export default function LoginPage() {
                     >
                         {mutation.isPending ? "Signing in..." : "Log in"}
                     </Button>
-                    <Link className="auth-link" href={"/reset-password" as Route}>
+                    <Link className="auth-link" href={"/reset-password/request" as Route}>
                         Forgot password?
                     </Link>
                 </div>

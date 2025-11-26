@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { socialLogin } from "@/services/auth";
 import type { SocialLoginRequest } from "@/types/dto/auth";
@@ -17,6 +17,8 @@ export function OAuthButtons() {
     const router = useRouter();
     const dispatch = useAppDispatch();
     const [busyProvider, setBusyProvider] = useState<Provider | null>(null);
+    const [googleReady, setGoogleReady] = useState(false);
+    const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
 
     const socialMutation = useMutation({
         mutationFn: socialLogin,
@@ -48,18 +50,96 @@ export function OAuthButtons() {
         }
     });
 
-    const handleSocial = async (provider: Provider) => {
-        const token = prompt(`Paste ${provider} ID token:`);
-        if (!token) return;
-        setBusyProvider(provider);
-        const payload: SocialLoginRequest = {
-            socialId: token,
-            socialType: provider,
-            username: "social-user",
-            email: "social@example.com",
-            notificationToken: null
+    // Load Google Identity script
+    useEffect(() => {
+        if (googleReady || !googleClientId) return;
+        const scriptId = "google-identity-script";
+        if (document.getElementById(scriptId)) {
+            setGoogleReady(true);
+            return;
+        }
+        const script = document.createElement("script");
+        script.src = "https://accounts.google.com/gsi/client";
+        script.async = true;
+        script.defer = true;
+        script.id = scriptId;
+        script.onload = () => setGoogleReady(true);
+        script.onerror = () => {
+            dispatch(
+                pushToast({
+                    level: "error",
+                    title: "Google login unavailable",
+                    description: "Could not load Google identity script."
+                })
+            );
         };
-        socialMutation.mutate(payload);
+        document.body.appendChild(script);
+    }, [googleReady, googleClientId, dispatch]);
+
+    const handleGoogle = () => {
+        if (!googleClientId) {
+            dispatch(
+                pushToast({
+                    level: "error",
+                    title: "Google client missing",
+                    description: "Set NEXT_PUBLIC_GOOGLE_CLIENT_ID in env."
+                })
+            );
+            return;
+        }
+        if (!googleReady || !(window as any).google?.accounts?.id) {
+            dispatch(
+                pushToast({
+                    level: "error",
+                    title: "Google login not ready",
+                    description: "Try again in a moment."
+                })
+            );
+            return;
+        }
+        setBusyProvider("google");
+        const google = (window as any).google;
+        google.accounts.id.initialize({
+            client_id: googleClientId,
+            callback: (resp: { credential: string }) => {
+                const token = resp?.credential;
+                if (!token) {
+                    setBusyProvider(null);
+                    dispatch(
+                        pushToast({
+                            level: "error",
+                            title: "Google login failed",
+                            description: "No credential returned."
+                        })
+                    );
+                    return;
+                }
+                const payload: SocialLoginRequest = {
+                    socialId: token,
+                    socialType: "google",
+                    username: "google-user",
+                    email: "google@example.com",
+                    notificationToken: null
+                };
+                socialMutation.mutate(payload);
+            }
+        });
+        google.accounts.id.prompt(() => {
+            // prompt asynchronously
+        });
+    };
+
+    const handleFacebook = () => {
+        const token = prompt("Paste Facebook access token:");
+        if (!token) return;
+        setBusyProvider("facebook");
+        socialMutation.mutate({
+            socialId: token,
+            socialType: "facebook",
+            username: "facebook-user",
+            email: "fb@example.com",
+            notificationToken: null
+        });
     };
 
     return (
@@ -68,14 +148,14 @@ export function OAuthButtons() {
             <div className="auth-oauth__actions">
                 <Button
                     variant="secondary"
-                    onClick={() => handleSocial("google")}
+                    onClick={handleGoogle}
                     disabled={busyProvider !== null}
                 >
                     {busyProvider === "google" ? "Signing in..." : "Google"}
                 </Button>
                 <Button
                     variant="secondary"
-                    onClick={() => handleSocial("facebook")}
+                    onClick={handleFacebook}
                     disabled={busyProvider !== null}
                 >
                     {busyProvider === "facebook" ? "Signing in..." : "Facebook"}
