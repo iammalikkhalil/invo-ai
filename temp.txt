@@ -1,0 +1,236 @@
+0 "use client";
+1 
+2 import { useEffect } from "react";
+3 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+4 import { zodResolver } from "@hookform/resolvers/zod";
+5 import { useForm } from "react-hook-form";
+6 import { z } from "zod";
+7 import { PageHeader } from "@/components/layout/page-header";
+8 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+9 import { Button } from "@/components/ui/button";
+10 import { Input } from "@/components/ui/input";
+11 import { Label } from "@/components/ui/label";
+12 import { fetchProfile, updateProfile } from "@/services/profile";
+13 import { useApiError } from "@/hooks/useApiError";
+14 import { pushToast } from "@/store/slices/uiSlice";
+15 import { useAppDispatch } from "@/store";
+1 
+17 const profileSchema = z.object({
+18     username: z.string().min(2, "Name is required"),
+19     phoneNumber: z.string().optional(),
+20     address: z.string().optional(),
+21     country: z.string().optional(),
+22     state: z.string().optional(),
+23     city: z.string().optional(),
+24     notificationToken: z.string().optional()
+25 });
+26 type ProfileFormValues = z.infer<typeof profileSchema>;
+1 
+28 export default function SettingsPage() {
+29     const dispatch = useAppDispatch();
+30     const { notifyError } = useApiError();
+31     const queryClient = useQueryClient();
+1 
+33     const profileQuery = useQuery({
+34         queryKey: ["profile"],
+35         queryFn: fetchProfile
+36     });
+1 
+38     const profileForm = useForm<ProfileFormValues>({
+39         resolver: zodResolver(profileSchema),
+40         mode: "onBlur",
+41         reValidateMode: "onChange",
+42         defaultValues: {
+43             username: "",
+44             phoneNumber: "",
+45             address: "",
+46             country: "",
+47             state: "",
+48             city: "",
+49             notificationToken: ""
+50         }
+36     });
+1 
+53     useEffect(() => {
+54         if (profileQuery.data) {
+55             const p = profileQuery.data;
+56             profileForm.reset({
+57                 username: p.username ?? "",
+58                 phoneNumber: p.phoneNumber ?? "",
+59                 address: p.address ?? "",
+60                 country: p.country ?? "",
+61                 state: p.state ?? "",
+62                 city: p.city ?? "",
+63                 notificationToken: p.notificationToken ?? ""
+64             });
+65             console.log("[profile][hydrate]", p);
+50         }
+67     }, [profileQuery.data, profileForm]);
+1 
+69     const updateProfileMutation = useMutation({
+70         mutationFn: updateProfile,
+71         onSuccess: (data) => {
+72             queryClient.invalidateQueries({ queryKey: ["profile"] });
+73             dispatch(
+74                 pushToast({
+75                     level: "success",
+76                     title: "Profile updated",
+77                     description: "Your profile has been saved.",
+78                     durationMs: 2500
+79                 })
+80             );
+81             console.log("[profile][update] success", data);
+82         },
+83         onError: (err) => notifyError(err, "Update failed")
+36     });
+1 
+86     const onSubmitProfile = (values: ProfileFormValues) => {
+87         console.log("[profile][submit]", values);
+88         updateProfileMutation.mutate({
+89             ...values,
+90             // avatar not supported by backend yet
+91         });
+92     };
+1 
+94     return (
+95         <div className="container-page page">
+96             <PageHeader
+97                 title="Profile"
+98                 description="Update your profile and account security."
+99                 actions={
+100                     <Button
+101                         size="sm"
+102                         onClick={profileForm.handleSubmit(onSubmitProfile)}
+103                         disabled={updateProfileMutation.isPending}
+104                     >
+105                         Save changes
+106                     </Button>
+107                 }
+108             />
+1 
+110             <Card>
+111                 <CardHeader>
+112                     <CardTitle>Personal info</CardTitle>
+113                     <CardDescription>Manage your name, contact, and avatar.</CardDescription>
+114                 </CardHeader>
+115                 <CardContent className="page-section">
+116                     <div className="form-grid">
+117                         <div className="form-control">
+118                             <Label htmlFor="username">Name</Label>
+119                             <Input id="username" {...profileForm.register("username")} />
+120                             {profileForm.formState.errors.username && (
+121                                 <p className="form-error">
+122                                     {profileForm.formState.errors.username.message}
+123                                 </p>
+124                             )}
+125                         </div>
+117                         <div className="form-control">
+127                             <Label>Email</Label>
+128                             <div className="text-input" aria-readonly="true">
+129                                 {profileQuery.data?.email ?? "Loading..."}
+130                             </div>
+125                         </div>
+117                         <div className="form-control">
+133                             <Label htmlFor="phoneNumber">Phone</Label>
+134                             <Input id="phoneNumber" {...profileForm.register("phoneNumber")} />
+125                         </div>
+117                         <div className="form-control">
+137                             <Label htmlFor="notificationToken">Notification token</Label>
+138                             <Input id="notificationToken" {...profileForm.register("notificationToken")} />
+125                         </div>
+117                         <div className="form-control">
+141                             <Label htmlFor="address">Address</Label>
+142                             <Input id="address" {...profileForm.register("address")} />
+125                         </div>
+117                         <div className="form-control">
+145                             <Label htmlFor="city">City</Label>
+146                             <Input id="city" {...profileForm.register("city")} />
+125                         </div>
+117                         <div className="form-control">
+149                             <Label htmlFor="state">State</Label>
+150                             <Input id="state" {...profileForm.register("state")} />
+125                         </div>
+117                         <div className="form-control">
+153                             <Label htmlFor="country">Country</Label>
+154                             <Input id="country" {...profileForm.register("country")} />
+125                         </div>
+156                     </div>
+157                     <div className="settings-actions">
+158                         <Button
+159                             type="button"
+160                             onClick={profileForm.handleSubmit(onSubmitProfile)}
+161                             disabled={updateProfileMutation.isPending}
+162                         >
+163                             Save profile
+164                         </Button>
+156                     </div>
+166                 </CardContent>
+167             </Card>
+1 
+110             <Card>
+111                 <CardHeader>
+171                     <CardTitle>Password</CardTitle>
+172                     <CardDescription>Update your password for better security.</CardDescription>
+114                 </CardHeader>
+174                 <CardContent>
+175                     <PasswordForm
+176                         onSubmit={onSubmitPassword}
+177                         mutationPending={updatePasswordMutation.isPending}
+178                     />
+166                 </CardContent>
+167             </Card>
+181         </div>
+182     );
+183 }
+1 
+185 function PasswordForm({
+186     onSubmit,
+187     mutationPending
+188 }: {
+189     onSubmit: (vals: PasswordFormValues) => void;
+190     mutationPending: boolean;
+191 }) {
+192     const form = useForm<PasswordFormValues>({
+193         resolver: zodResolver(passwordSchema),
+40         mode: "onBlur",
+41         reValidateMode: "onChange",
+42         defaultValues: {
+197             oldPassword: "",
+198             newPassword: "",
+199             confirmPassword: ""
+50         }
+36     });
+1 
+94     return (
+204         <form className="page-section" onSubmit={form.handleSubmit(onSubmit)}>
+205             <div className="form-grid">
+206                 <div className="form-control">
+207                     <Label htmlFor="oldPassword">Current password</Label>
+208                     <PasswordInput id="oldPassword" {...form.register("oldPassword")} />
+209                     {form.formState.errors.oldPassword && (
+210                         <p className="form-error">{form.formState.errors.oldPassword.message}</p>
+211                     )}
+212                 </div>
+206                 <div className="form-control">
+214                     <Label htmlFor="newPassword">New password</Label>
+215                     <PasswordInput id="newPassword" {...form.register("newPassword")} />
+216                     {form.formState.errors.newPassword && (
+217                         <p className="form-error">{form.formState.errors.newPassword.message}</p>
+211                     )}
+212                 </div>
+206                 <div className="form-control">
+221                     <Label htmlFor="confirmPassword">Confirm password</Label>
+222                     <PasswordInput id="confirmPassword" {...form.register("confirmPassword")} />
+223                     {form.formState.errors.confirmPassword && (
+224                         <p className="form-error">{form.formState.errors.confirmPassword.message}</p>
+211                     )}
+212                 </div>
+227             </div>
+228             <div className="settings-actions">
+229                 <Button type="submit" disabled={mutationPending}>
+230                     {mutationPending ? "Updating..." : "Update password"}
+231                 </Button>
+227             </div>
+233         </form>
+182     );
+183 }

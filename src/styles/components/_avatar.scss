@@ -1,0 +1,12 @@
+@use "../base/tokens";
+
+.name-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-weight: 700;
+    color: tokens.color-var("surface");
+    box-shadow: tokens.shadow("sm");
+    text-transform: uppercase;
+}

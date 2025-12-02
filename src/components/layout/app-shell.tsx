@@ -1,7 +1,9 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { MainNav } from "./main-nav";
+import { useState } from "react";
+import { clsx } from "clsx";
+import { SidebarNav } from "./sidebar-nav";
 import { HeaderActions } from "./header-actions";
 import { ToastHost } from "@/components/system/ToastHost";
 import { ModalHost } from "@/components/system/ModalHost";
@@ -24,25 +26,45 @@ function isAuthPath(pathname: string) {
 export function AppShell({ children }: { children: React.ReactNode }) {
     const pathname = usePathname() || "";
     const hideChrome = isAuthPath(pathname);
+    const [navOpen, setNavOpen] = useState(false);
 
     return (
-        <div className="app-shell">
+        <div className={clsx("app-shell", hideChrome && "app-shell--auth")}>
             {!hideChrome && (
-                <header className="app-shell__header">
-                    <div className="app-shell__intro">
-                        <MainNav />
-                        <HeaderActions />
-                    </div>
-                </header>
+                <div className={clsx("app-shell__sidebar", navOpen && "is-open")}>
+                    <SidebarNav onNavigate={() => setNavOpen(false)} />
+                </div>
             )}
-            <main>{children}</main>
-            {!hideChrome && (
-                <footer className="app-shell__footer">
-                    <div className="container-page footer-meta">
-                        <p>Invotick Web - Next.js scaffold</p>
-                        <p>Connected to your Spring Boot backend via REST.</p>
-                    </div>
-                </footer>
+            <div className="app-shell__body">
+                {!hideChrome && (
+                    <header className="app-shell__header">
+                        <button
+                            type="button"
+                            className="sidebar-toggle"
+                            aria-label="Toggle navigation"
+                            onClick={() => setNavOpen((prev) => !prev)}
+                        >
+                            ☰
+                        </button>
+                        <HeaderActions />
+                    </header>
+                )}
+                <main className="app-shell__content">{children}</main>
+                {!hideChrome && (
+                    <footer className="app-shell__footer">
+                        <div className="container-page footer-meta">
+                            <p>Invotick Web - Next.js scaffold</p>
+                            <p>Connected to your Spring Boot backend via REST.</p>
+                        </div>
+                    </footer>
+                )}
+            </div>
+            {!hideChrome && navOpen && (
+                <div
+                    className="sidebar-overlay"
+                    onClick={() => setNavOpen(false)}
+                    aria-hidden="true"
+                />
             )}
             <ToastHost />
             <ModalHost />

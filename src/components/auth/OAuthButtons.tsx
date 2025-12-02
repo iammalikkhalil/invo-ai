@@ -8,6 +8,7 @@ import { useAppDispatch } from "@/store";
 import { setTokens, setUser } from "@/store/slices/authSlice";
 import { pushToast } from "@/store/slices/uiSlice";
 import { saveTokens } from "@/services/auth/tokenStorage";
+import { saveUser } from "@/services/auth/userStorage";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 
@@ -72,6 +73,7 @@ export function OAuthButtons() {
             dispatch(setTokens({ accessToken: data.token }));
             saveTokens(data.token);
             dispatch(setUser(data.userProfile));
+            saveUser(data.userProfile);
             dispatch(
                 pushToast({
                     level: "success",
@@ -213,21 +215,21 @@ export function OAuthButtons() {
         try {
             dispatch(setTokens({ accessToken: token }));
             saveTokens(token);
-            dispatch(
-                setUser({
-                    id: Number(decoded?.sub ?? Date.now()),
-                    username: payload.username,
-                    email: payload.email,
-                    phoneNumber: (decoded?.phone_number as string | undefined) ?? null,
-                    isVerified: Boolean(decoded?.email_verified ?? true),
-                    address: null,
-                    country: (decoded?.locale as string | undefined) ?? null,
-                    state: null,
-                    city: null,
-                    profilePictureUrl:
-                        (decoded?.picture as string | undefined) ?? undefined
-                })
-            );
+            const mockedUser = {
+                id: Number(decoded?.sub ?? Date.now()),
+                username: payload.username,
+                email: payload.email,
+                phoneNumber: (decoded?.phone_number as string | undefined) ?? null,
+                isVerified: Boolean(decoded?.email_verified ?? true),
+                address: null,
+                country: (decoded?.locale as string | undefined) ?? null,
+                state: null,
+                city: null,
+                profilePictureUrl: (decoded?.picture as string | undefined) ?? undefined,
+                notificationToken: null
+            };
+            dispatch(setUser(mockedUser));
+            saveUser(mockedUser);
             dispatch(
                 pushToast({
                     level: "success",

@@ -19,6 +19,7 @@ import { setTokens, setUser } from "@/store/slices/authSlice";
 import { pushToast } from "@/store/slices/uiSlice";
 import { saveTokens } from "@/services/auth/tokenStorage";
 import { useApiError } from "@/hooks/useApiError";
+import { saveUser } from "@/services/auth/userStorage";
 
 const schema = z.object({
     email: z
@@ -73,6 +74,7 @@ export default function LoginPage() {
             dispatch(setTokens({ accessToken: data.token }));
             saveTokens(data.token);
             dispatch(setUser(data.userProfile));
+            saveUser(data.userProfile);
             dispatch(
                 pushToast({
                     level: "success",

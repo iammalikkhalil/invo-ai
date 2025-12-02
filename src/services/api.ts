@@ -3,6 +3,7 @@ import { store } from "@/store";
 import { clearAuth } from "@/store/slices/authSlice";
 import { startLoading, stopLoading } from "@/store/slices/uiSlice";
 import { authConfig } from "./auth/config";
+import { clearUser } from "./auth/userStorage";
 
 const api = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_BASE_URL
@@ -50,6 +51,7 @@ api.interceptors.response.use(
             // Placeholder for future refresh logic
             store.dispatch(clearAuth());
         } else if (status === 401) {
+            clearUser();
             store.dispatch(clearAuth());
         }
 

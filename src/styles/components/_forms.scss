@@ -86,3 +86,44 @@
     cursor: pointer;
     color: tokens.color-var("text-muted");
 }
+
+.avatar-uploader {
+    display: flex;
+    align-items: center;
+    gap: tokens.space("md");
+}
+
+.avatar-uploader__preview {
+    position: relative;
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: tokens.color-var("surface-muted");
+    border: 1px solid tokens.color-var("border");
+}
+
+.avatar-uploader__preview img {
+    object-fit: cover;
+}
+
+.avatar-uploader__placeholder {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    color: tokens.color-var("text-muted");
+    font-size: tokens.font-size("sm");
+}
+
+.avatar-uploader__button {
+    position: relative;
+    overflow: hidden;
+}
+
+.avatar-uploader__input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+}

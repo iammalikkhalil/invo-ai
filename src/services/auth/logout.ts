@@ -5,6 +5,7 @@ import { useAppDispatch } from "@/store";
 import { clearAuth } from "@/store/slices/authSlice";
 import { clearStoredTokens } from "./tokenStorage";
 import { pushToast } from "@/store/slices/uiSlice";
+import { clearUser } from "./userStorage";
 
 export function useLogout() {
     const router = useRouter();
@@ -12,6 +13,7 @@ export function useLogout() {
 
     const logout = () => {
         clearStoredTokens();
+        clearUser();
         dispatch(clearAuth());
         dispatch(
             pushToast({

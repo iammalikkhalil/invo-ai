@@ -19,6 +19,7 @@ import { pushToast } from "@/store/slices/uiSlice";
 import { saveTokens } from "@/services/auth/tokenStorage";
 import { useApiError } from "@/hooks/useApiError";
 import { getLastAuthEmail } from "@/services/auth/localAuthState";
+import { saveUser } from "@/services/auth/userStorage";
 
 const schema = z.object({
     otp: z.string().min(4, "Enter the 4-digit code").max(6, "Enter a valid code")
@@ -59,6 +60,7 @@ export default function VerifyOtpPage() {
             dispatch(setTokens({ accessToken: data.token }));
             saveTokens(data.token);
             dispatch(setUser(data.userProfile));
+            saveUser(data.userProfile);
             dispatch(
                 pushToast({
                     level: "success",

@@ -5,8 +5,22 @@ export interface AuthState {
     accessToken?: string;
     refreshToken?: string;
     strategy: TokenStrategy;
-    user?: unknown;
+    user?: AuthUser;
 }
+
+export type AuthUser = {
+    id: number;
+    username: string;
+    email: string;
+    phoneNumber?: string | null;
+    isVerified?: boolean;
+    address?: string | null;
+    country?: string | null;
+    state?: string | null;
+    city?: string | null;
+    profilePictureUrl?: string | null;
+    notificationToken?: string | null;
+};
 
 const initialState: AuthState = {
     strategy:
@@ -31,7 +45,7 @@ const authSlice = createSlice({
             state.refreshToken = undefined;
             state.user = undefined;
         },
-        setUser(state, action: PayloadAction<unknown>) {
+        setUser(state, action: PayloadAction<AuthUser | undefined>) {
             state.user = action.payload;
         },
         setStrategy(state, action: PayloadAction<TokenStrategy>) {
