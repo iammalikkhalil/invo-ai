@@ -87,6 +87,22 @@
     color: tokens.color-var("text-muted");
 }
 
+.textarea {
+    width: 100%;
+    min-height: 120px;
+    border-radius: tokens.radius("md");
+    border: 1px solid tokens.color-var("border");
+    background-color: tokens.color-var("surface");
+    padding: 0.65rem tokens.space("md");
+    font-size: tokens.font-size("sm");
+    resize: vertical;
+
+    &:focus {
+        border-color: tokens.color-var("brand");
+        @include mixins.focus-ring;
+    }
+}
+
 .avatar-uploader {
     display: flex;
     align-items: center;
