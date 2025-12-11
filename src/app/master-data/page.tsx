@@ -1,10 +1,10 @@
 "use client";
 
-import { TaxesSection } from "./taxes/page";
-import { UnitsSection } from "./units/page";
-import { CategoriesSection } from "./categories/page";
-import { TermsSection } from "./terms/page";
-import { PaymentInstructionsSection } from "./payment-instructions/page";
+import { TaxesSection } from "./taxes/Section";
+import { UnitsSection } from "./units/Section";
+import { CategoriesSection } from "./categories/Section";
+import { TermsSection } from "./terms/Section";
+import { PaymentInstructionsSection } from "./payment-instructions/Section";
 
 export default function MasterDataPage() {
     return (
